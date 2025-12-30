@@ -1,5 +1,7 @@
 const userModel = require("../model/userModel");
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 
 const userController = {
 saveUser: async (req, res) => {
@@ -114,8 +116,38 @@ saveUser: async (req, res) => {
             console.log(error);
             res.status(500).json({mes:'User Not Deleted !!'});
         }
+    },
+
+
+    userLogin: async (req,res) => {
+        try {
+            const { email, password } = req.body;
+            const [selectUser] = await userModel.findByUseEmail(email);
+            
+            if(selectUser.length === 0){
+                return res.status(404).json({ mes: 'User not found' });
+            }
+            const isMatch = await bcrypt.compare(password, selectUser[0].password);
+            if (!isMatch) {
+                return res.status(401).json({ mes: 'Invalid password, Please check.....' });
+            }
+            const user = selectUser[0];
+            const token = jwt.sign(
+                {
+                    id: user.id,
+                    email: user.email
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: '2h' }
+            )
+            res.status(200).json({token, email: user.email});
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ mes: 'Internal Server Error' });
+        }
     }
 }
+
 
 
 

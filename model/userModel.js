@@ -84,7 +84,10 @@ create: (user) => {
         return db.execute(sql, [UserId]);
     },
 
-
+    findByUseEmail: (email) => {
+        const sql = `SELECT * FROM user WHERE email = ? AND satus = 1`;
+        return db.execute(sql, [email]);
+    }
 
 }
 
