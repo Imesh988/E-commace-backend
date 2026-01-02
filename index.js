@@ -6,6 +6,7 @@ const app = express();
 
 const userRouter = require('./router/userRouter');
 const roleRouter = require('./router/roleRouter');
+const superAdminRouter = require('./router/superAdminRputer');
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
@@ -16,3 +17,4 @@ app.use(express.json());
 
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/role', roleRouter);
+app.use('/api/v1/superAdmin', superAdminRouter);
