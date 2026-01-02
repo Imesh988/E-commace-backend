@@ -58,7 +58,7 @@ const superAminController = {
             res.status(200).json({data:result})
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg: 'Internal Server Error !!'})
+            res.status(500).json({msg: 'Internal Server Error !!'});
         }
     },
 
@@ -127,5 +127,4 @@ const superAminController = {
 }
 
 
-module.exports = superAminController;
 module.exports = superAminController;

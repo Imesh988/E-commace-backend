@@ -9,9 +9,9 @@ const roleModel = {
     },
 
     findAll: () => {
-        const sql = `SELECT role, description 
-                     FROM role 
-                     ORDER BY role ASC;`;
+            const sql = `SELECT role, description 
+                        FROM role 
+                        ORDER BY role ASC;`;
         return db.execute(sql);             
     },
 
