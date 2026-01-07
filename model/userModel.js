@@ -47,10 +47,10 @@ create: (user) => {
     findBytext: (input) => {
         const searchText = `%${input}%`;
         const sql = `SELECT * FROM user WHERE satus=1 AND 
-                    first_name LIKE ? OR last_name LIKE ? OR  country LIKE ? 
+                    (first_name LIKE ? OR last_name LIKE ? OR  country LIKE ? 
                     OR disctric LIKE ? OR city LIKE ? OR addree_line1 LIKE ?
                     OR address_line2 LIKE ? OR postal_code LIKE ? OR mobile_no_1 LIKE ?
-                    OR mobile_no_2 LIKE ? OR email LIKE ?`;
+                    OR mobile_no_2 LIKE ? OR email LIKE ?)`;
 
         return db.execute(sql, [searchText, searchText, searchText, searchText,
             searchText, searchText, searchText, searchText, searchText, searchText,

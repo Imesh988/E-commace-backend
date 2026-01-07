@@ -87,7 +87,7 @@ saveUser: async (req, res) => {
             }
 
             const [result] = await userModel.update(userData,userId);
-            if(result.affectedRows === 1){
+            if(result.affectedRows === 1){  
                 return res.status(200).json({mes:'User Updated !!'});
             }else{
                 return res.status(400).json({mes:'User Not Updated !!'});
