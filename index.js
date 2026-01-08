@@ -9,6 +9,7 @@ const roleRouter = require('./router/roleRouter');
 const superAdminRouter = require('./router/superAdminRputer');
 const sellerRouter = require('./router/sellerRouter');
 const supplierRouter = require('./router/supplierRouter');
+const grnRouter = require('./router/grnRouter');
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
@@ -22,3 +23,4 @@ app.use('/api/v1/role', roleRouter);
 app.use('/api/v1/superAdmin', superAdminRouter);
 app.use('/api/v1/seller', sellerRouter);
 app.use('/api/v1/supplier', supplierRouter);
+app.use('/api/v1/grn', grnRouter);

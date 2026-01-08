@@ -5,7 +5,7 @@ const supplierModel = {
     create: (supplier) => {
         const {seller_id,supplier_name,address,tel_no,status=1} = supplier;
         const sql = `INSERT INTO supplier (seller_id ,supplier_name ,address ,tel_no ,
-                     status ,created_at ,updated_at ) VALUES (?,?,?,?,?,NOW(),NOW());`
+                     status ,created_at  ) VALUES (?,?,?,?,?,NOW(),NOW());`
         
        return db.execute(sql,[seller_id,supplier_name,address,tel_no,status]);              
     },
