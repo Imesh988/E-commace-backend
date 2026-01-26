@@ -28,7 +28,7 @@ const productModel = {
     update: (products, productId) => {
         const { product_id, product_code, product_name, price, product_colors, status, category_id } = products;
         const sql = `UPDATE product SET product_code = ?, product_name = ?, price = ?,
-                    product_colors = ?, status = ? category_id = ? WHERE product_id = ? `;
+                    product_colors = ?, status = ?, category_id = ? WHERE product_id = ? `;
         return db.execute(sql, [product_code, product_name, price, product_colors, status, category_id, productId])
     },
 
