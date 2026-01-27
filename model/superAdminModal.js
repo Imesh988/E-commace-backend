@@ -1,5 +1,5 @@
 const db = require('../config/database');
-const { findAll } = require('./roleModal');
+
 
 const superAdminModal = {
     create: (superAdmin) => {
@@ -16,7 +16,7 @@ const superAdminModal = {
     },
 
     findAll: () => {
-        const sql = `SELECT user_name,super_admin_name,email FROM super_admin ORDER BY 
+        const sql = `SELECT super_admin_id,user_name,super_admin_name,email FROM super_admin WHERE status=1 ORDER BY 
                     super_admin.user_name ASC ;`;
         return db.execute(sql) ;           
     },
@@ -24,19 +24,24 @@ const superAdminModal = {
     findByText: (input) => {
         const searchText = `%${input}%`;
         const sql = `SELECT * FROM super_admin WHERE status=1 AND 
-                    user_name LIKE ? OR super_admin_name LIKE ? OR  email LIKE ?`;
+                   ( user_name LIKE ? OR super_admin_name LIKE ? OR  email LIKE ?)`;
         return db.execute(sql, [searchText, searchText, searchText]);
     },
 
+    // update: (superAdmin, superAdminId) => {
+    //     const {user_name ,
+    //         password ,
+    //         super_admin_name ,
+    //         email} 
+    //         = superAdmin;
+    //         const sql = `UPDATE super_admin SET user_name=?, password=?, super_admin_name=?, email=? WHERE super_admin_id=?`;
+    //         return db.execute(sql, [user_name, password, super_admin_name, email, superAdminId]);
+    // },
+
     update: (superAdmin, superAdminId) => {
-        const {user_name ,
-            password ,
-            super_admin_name ,
-            email} 
-            = superAdmin;
-            const sql = `UPDATE super_admin SET user_name=?, password=?, super_admin_name=?, email=? WHERE super_admin_id=?`;
-            return db.execute(sql, [user_name, password, super_admin_name, email, superAdminId]);
-    },
+            const sql = `UPDATE super_admin SET ? WHERE super_admin_id = ?`;
+            return db.query(sql, [superAdmin, superAdminId]);
+        },
 
     delete: (superAdminId) => {
         const sql = `UPDATE super_admin SET status = 0 WHERE super_admin_id = ?`;

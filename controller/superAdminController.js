@@ -4,12 +4,12 @@ const jwt = require('jsonwebtoken');
 
 
 const superAminController = {
-    superAdminCreate: async(req,res) => {
+    superAdminCreate: async (req, res) => {
         try {
-            const {password, ...otherData} = req.body;
+            const { password, ...otherData } = req.body;
 
-            if(!password){
-                return res.status(400).json({msg:'Password is required'})
+            if (!password) {
+                return res.status(400).json({ msg: 'Password is required' })
             }
 
             const saltRounds = 10;
@@ -21,93 +21,106 @@ const superAminController = {
             }
 
             const [result] = await superAdminModal.create(superAdminData);
-            if(result.affectedRows === 1){
-                return res.status(201).json({msg:'Super Admin Created Successfully!'});
-            }else{
-                return res.status(400).json({msg:'Super Admin Not Created!'});
+            if (result.affectedRows === 1) {
+                return res.status(201).json({ msg: 'Super Admin Created Successfully!' });
+            } else {
+                return res.status(400).json({ msg: 'Super Admin Not Created!' });
             }
         } catch (error) {
             console.log(error);
-            return res.status(500).json({msg:'Internal Server Error!'});
+            return res.status(500).json({ msg: 'Internal Server Error!' });
         }
     },
 
-    getAllSuperAdmin: async(req,res) => {
+    getAllSuperAdmin: async (req, res) => {
         try {
             const [result] = await superAdminModal.findAll();
-            if(result.length === 0){
-                return res.status(404).json({msg:'Super Admin Not Found !!'});
+            if (result.length === 0) {
+                return res.status(404).json({ msg: 'Super Admin Not Found !!' });
 
             }
-            res.status(200).json({data:result});
+            res.status(200).json({ data: result });
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg: 'Internal Server Error !!'});
-            
-            
+            res.status(500).json({ msg: 'Internal Server Error !!' });
+
+
         }
     },
 
-    getSuperAdminText: async(req, res) => {
+    getSuperAdminText: async (req, res) => {
         try {
             const searchText = req.params.text;
             const [result] = await superAdminModal.findByText(searchText);
-            if(result.length === 0){
-                return res.status(404).json({msg:'Super Admin Not Found !!'})
+            if (result.length === 0) {
+                return res.status(404).json({ msg: 'Super Admin Not Found !!' })
             }
-            res.status(200).json({data:result})
+            res.status(200).json({ data: result })
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg: 'Internal Server Error !!'});
+            res.status(500).json({ msg: 'Internal Server Error !!' });
         }
     },
 
-    superAdminUpdate: async(req,res) => {
+    superAdminUpdate: async (req, res) => {
         try {
             const superAdminData = req.body;
-            const superAdminId = req.params.superAdminId;
-            const [result] = await superAdminModal.update(superAdminData,superAdminId);
-            if(result.affectedRows === 1){
-                return res.status(200).json({msg:'Super Admin Updated Successfully!'});
-            }else{
-                return res.status(400).json({msg:'Super Admin Not Updated!'});
+            let superAdminId = req.params.superAdminId;
+
+            if (!superAdminData.password || superAdminData.password.trim() === "") {
+                delete superAdminData.password;
+            }
+
+            Object.keys(superAdminData).forEach(key => {
+                if (superAdminData[key] === undefined) {
+                    delete superAdminData[key];
+                }
+            });
+
+
+
+            const [result] = await superAdminModal.update(superAdminData, superAdminId);
+            if (result.affectedRows >= 1) {
+                return res.status(200).json({ mes: 'Super Admin  Updated !!' });
+            } else {
+                return res.status(400).json({ mes: 'Super Admin  Not Updated !!' });
             }
 
         } catch (error) {
             console.log(error);
-            return res.status(500).json({msg:'Internal Server Error!'});
+            return res.status(500).json({ msg: 'Internal Server Error!' });
         }
     },
 
-    superAdminDelete: async(req,res) => {
+    superAdminDelete: async (req, res) => {
         try {
             const superAdminId = req.params.superAdminId;
             const [result] = await superAdminModal.delete(superAdminId);
 
-            if(result.affectedRows === 1){
-                return res.status(200).json({msg:'Super Admin Deleted Successfully!'});
-            }else{
-                return res.status(400).json({msg:'Super Admin Not Deleted!'});
+            if (result.affectedRows === 1) {
+                return res.status(200).json({ msg: 'Super Admin Deleted Successfully!' });
+            } else {
+                return res.status(400).json({ msg: 'Super Admin Not Deleted!' });
             }
         } catch (error) {
             console.log(error);
-            return res.status(500).json({msg:'Internal Server Error!'});
+            return res.status(500).json({ msg: 'Internal Server Error!' });
         }
     },
 
-    superAdminLogin: async(req,res) => {
+    superAdminLogin: async (req, res) => {
         try {
-            const {user_name, password} = req.body;
+            const { user_name, password } = req.body;
             // console.log(user_name,password);
-            
+
             const [selectSuperAdmin] = await superAdminModal.findByUsername(user_name);
-            if(selectSuperAdmin.length === 0){
-                return res.status(404).json({msg:'Super Admin Not Found !!'})
+            if (selectSuperAdmin.length === 0) {
+                return res.status(404).json({ msg: 'Super Admin Not Found !!' })
             }
 
             const isMatch = await bcrypt.compare(password, selectSuperAdmin[0].password);
-            if(!isMatch){
-                return res.status(401).json({msg:'Invalid Password !!'})
+            if (!isMatch) {
+                return res.status(401).json({ msg: 'Invalid Password !!' })
             }
 
 
@@ -116,12 +129,12 @@ const superAminController = {
                 id: superAdmin.id,
                 username: superAdmin.username
             }, process.env.JWT_SECRET, { expiresIn: '2h' })
-            res.status(200).json({token, username: superAdmin.username})
+            res.status(200).json({ token, username: superAdmin.username })
         } catch (error) {
             console.log(error);
-            return res.status(500).json({msg:'Internal Server Error!'});
-            
-            
+            return res.status(500).json({ msg: 'Internal Server Error!' });
+
+
         }
     }
 }

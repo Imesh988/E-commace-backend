@@ -12,6 +12,11 @@ saveUser: async (req, res) => {
             return res.status(400).json({ msg: 'Password is required!' });
         }
 
+        const [existingUser] = await userModel.findByUseEmail(req.body.email);
+        if (existingUser.length > 0) {
+            return res.status(400).json({ msg: 'User Already Exists!' });
+        }
+
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         
@@ -54,8 +59,7 @@ saveUser: async (req, res) => {
             const searchText = req.params.text;
             const [result] = await userModel.findBytext(searchText);
             if(result.length === 0){
-                return res.status(404).json({mes:'Usernot Found !!'});
-            }
+            return res.status(200).json({ data: [] });             }
             res.status(200).json({data:result});
         } catch (error) {
             console.log(error);
@@ -77,27 +81,38 @@ saveUser: async (req, res) => {
         }
     },
 
-    updateUser: async(req,res) => {
-        try {
-            const userData = req.body;
-            const userId = req.params.userId;
-            const [finduser] = await userModel.findById(userId);
-            if(finduser.length === 0){
-                return res.status(404).json({mes:'Usernot Found !!'});
-            }
-
-            const [result] = await userModel.update(userData,userId);
-            if(result.affectedRows === 1){  
-                return res.status(200).json({mes:'User Updated !!'});
-            }else{
-                return res.status(400).json({mes:'User Not Updated !!'});
-            }
-
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({mes:'User Not Updated !!'});
+ updateUser: async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        let userData = req.body;
+        if (!userData.password || userData.password.trim() === "") {
+            delete userData.password;
         }
-    },
+
+       
+        Object.keys(userData).forEach(key => {
+            if (userData[key] === undefined) {
+                delete userData[key];
+            }
+        });
+
+        const [finduser] = await userModel.findById(userId);
+        if (finduser.length === 0) {
+            return res.status(404).json({ mes: 'User Not Found !!' });
+        }
+        const [result] = await userModel.update(userData, userId);
+
+        if (result.affectedRows >= 1) { 
+            return res.status(200).json({ mes: 'User Updated !!' });
+        } else {
+            return res.status(400).json({ mes: 'User Not Updated !!' });
+        }
+
+    } catch (error) {
+        console.log("Update Error: ", error);
+        return res.status(500).json({ mes: 'Internal Server Error !!', error: error.message });
+    }
+},
 
     userDelete: async(req,res) => {
         try {

@@ -18,7 +18,7 @@ const supplierController = {
 
     getAllSuppiler: async(req,res) => {
         try {
-            const [result] = await supplierModel.findAl();
+            const [result] = await supplierModel.findAll();
             if(result.length === 0){
                 return res.status(200).json({msg:'Supplier Not Found!'});
             }

@@ -9,7 +9,7 @@ const roleModel = {
     },
 
     findAll: () => {
-            const sql = `SELECT role, description 
+            const sql = `SELECT role_id, role, description 
                         FROM role 
                         ORDER BY role ASC;`;
         return db.execute(sql);             
@@ -24,7 +24,15 @@ const roleModel = {
     delete: (roleId) => {
         const sql = `DELETE FROM role WHERE role_id=?`;
         return db.execute(sql, [roleId]);
-    }
+    },
+
+    findBytext: (input) => {
+            const searchText = `%${input}%`;
+            const sql = `SELECT * FROM role WHERE role LIKE ? OR description LIKE ?`;
+    
+            return db.execute(sql, [searchText, searchText]);
+    
+        },
 
 };
 

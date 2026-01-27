@@ -3,37 +3,38 @@ const db = require('../config/database');
 
 const userModel = {
 
-create: (user) => {
-    const { 
-        first_name = null, 
-        last_name = null, 
-        country = null, 
-        disctric = null, 
-        city = null, 
-        addree_line1 = null,
-        address_line2 = null, 
-        postal_code = null, 
-        mobile_no_1 = null, 
-        mobile_no_2 = null,
-        email = null, 
-        password = null, 
-        satus = 1 
-    } = user;
+    create: (user) => {
+        const {
+            first_name = null,
+            last_name = null,
+            country = null,
+            disctric = null,
+            city = null,
+            addree_line1 = null,
+            address_line2 = null,
+            postal_code = null,
+            mobile_no_1 = null,
+            mobile_no_2 = null,
+            email = null,
+            password = null,
+            satus = 1
+        } = user;
 
-    const sql = `INSERT INTO user (first_name, last_name, country, disctric,
+        const sql = `INSERT INTO user (first_name, last_name, country, disctric,
                  city, addree_line1, address_line2, postal_code, mobile_no_1,
                  mobile_no_2, email, password, satus, created_at, updated_at) 
                  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, NOW(), NOW());`;
 
-    return db.execute(sql, [
-        first_name, last_name, country, disctric, city, addree_line1,
-        address_line2, postal_code, mobile_no_1, mobile_no_2,
-        email, password, satus
-    ]);
-},
+        return db.execute(sql, [
+            first_name, last_name, country, disctric, city, addree_line1,
+            address_line2, postal_code, mobile_no_1, mobile_no_2,
+            email, password, satus
+        ]);
+    },
 
     findAll: () => {
-        const sql = `SELECT first_name, last_name,country,disctric,city, 
+        // meke user_id aluthen damma 
+        const sql = `SELECT user_id, first_name, last_name,country,disctric,city, 
                      addree_line1,address_line2,postal_code,mobile_no_1,mobile_no_2,email, 
                      satus 
                      FROM user 
@@ -64,17 +65,24 @@ create: (user) => {
     },
 
 
+    // update: (user, UserId) => {
+    //     const { first_name, last_name, country, disctric, city, addree_line1,
+    //         address_line2, postal_code, mobile_no_1, mobile_no_2,
+    //         email, password } = user;
+
+    //     const sql = `UPDATE user SET first_name=?, last_name=?, country=?,
+    //      disctric=?, city=?, addree_line1=?, address_line2=?, postal_code=?, mobile_no_1=?, mobile_no_2=?,
+    //       email=?, password=? WHERE user_id=?`;
+
+    //     return db.execute(sql, [first_name, last_name, country, disctric, city, addree_line1, address_line2, postal_code, mobile_no_1, mobile_no_2, email, password, UserId]);
+
+    // },
+
+    // backend/model/userModel.js
+
     update: (user, UserId) => {
-        const { first_name, last_name, country, disctric, city, addree_line1,
-            address_line2, postal_code, mobile_no_1, mobile_no_2,
-            email, password } = user;
-
-        const sql = `UPDATE user SET first_name=?, last_name=?, country=?,
-         disctric=?, city=?, addree_line1=?, address_line2=?, postal_code=?, mobile_no_1=?, mobile_no_2=?,
-          email=?, password=? WHERE user_id=?`;
-
-        return db.execute(sql, [first_name, last_name, country, disctric, city, addree_line1, address_line2, postal_code, mobile_no_1, mobile_no_2, email, password, UserId]);
-
+        const sql = `UPDATE user SET ? WHERE user_id = ?`;
+        return db.query(sql, [user, UserId]);
     },
 
 
