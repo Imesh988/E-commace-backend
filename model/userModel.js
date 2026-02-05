@@ -64,7 +64,7 @@ const userModel = {
         return db.execute(sql, [UserId]);
     },
 
-
+    
     // update: (user, UserId) => {
     //     const { first_name, last_name, country, disctric, city, addree_line1,
     //         address_line2, postal_code, mobile_no_1, mobile_no_2,

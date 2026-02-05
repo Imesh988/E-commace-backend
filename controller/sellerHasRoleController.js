@@ -4,7 +4,7 @@ const sellerHasRoleController = {
     sellerHasRoleCreate: async (req,res) => {
         try {
             const [result] = await sellerHasRoleModel.create(req.body);
-
+          
             if(result.affectedRows === 1){
                 return res.status(201).json({msg:'Seller Has Role Created Successfully!'});
             }else{

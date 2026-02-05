@@ -11,7 +11,7 @@ const supplierModel = {
     },
 
     findAll: () => {
-        const sql = `SELECT seller_id,supplier_name,address,address FROM supplier 
+        const sql = `SELECT supplier_id, seller_id,supplier_name,address,tel_no FROM supplier 
                       WHERE status=1 ORDER BY supplier_name ASC `;
         return db.execute(sql);
     },

@@ -1,21 +1,31 @@
 const sellerModal = require("../model/sellermodal");
 
 const sellerController = {
-    sellerCreate: async (req,res) => {
+     sellerCreate: async (req, res) => {
         try {
             const [result] = await sellerModal.create(req.body);
-            console.log(result);
-            
-            if(result.affectedRows === 1){
-                return res.status(201).json({msg:'Seller Created Successfully!'});
-            }else{
-                return res.status(400).json({msg:'Seller Not Created!'});
+            if (result.affectedRows === 1) {
+                return res.status(201).json({ msg: 'Seller Created Successfully!' });
+            } else {
+                return res.status(400).json({ msg: 'Seller Not Created!' });
             }
         } catch (error) {
             console.log(error);
-            return res.status(500).json({msg:'Internal Server Error!'});
+
+            if (error.code === 'ER_DUP_ENTRY') {
+                if (error.sqlMessage.includes('email')) {
+                    return res.status(400).json({ msg: 'Email already exists!' });
+                }
+                if (error.sqlMessage.includes('PRIMARY') || error.sqlMessage.includes('seller_id')) {
+                    return res.status(400).json({ msg: 'Seller ID already exists!' });
+                }
+                return res.status(400).json({ msg: 'Duplicate entry detected!' });
+            }
+
+            return res.status(500).json({ msg: 'Internal Server Error!' });
         }
     },
+
 
     getAllSeller: async(req,res) => {
         try {

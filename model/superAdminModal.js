@@ -51,6 +51,11 @@ const superAdminModal = {
     findByUsername: (username) => {
         const sql = `SELECT * FROM super_admin WHERE user_name = ? AND status = 1`;
         return db.execute(sql, [username]);
+    },
+
+     findByUseremail: (email) => {
+        const sql = `SELECT * FROM super_admin WHERE email = ? AND status = 1`;
+        return db.execute(sql, [email]);
     }
     
 }

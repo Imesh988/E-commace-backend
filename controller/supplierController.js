@@ -67,7 +67,7 @@ const supplierController = {
     deleteSupplier: async(req,res) => {
         try {
             const supplierId = req.params.supplierId;
-
+            // console.log(supplierId);
             const [resut] = await supplierModel.delete(supplierId);
             if(resut.affectedRows === 1){
                 return res.status(200).json({msg:'Supplier Deleted Successfully !!'});
