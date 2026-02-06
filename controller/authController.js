@@ -20,20 +20,18 @@ const authController = {
             });
         }
 
-        const { email, password } = req.body;
+        const { email, password , isFirebaseLogin } = req.body;
 
         const [superAdminRows] = await superAdminModal.findByUseremail(email);
 
         if (superAdminRows.length > 0) {
             const superAdmin = superAdminRows[0];
 
-            const isPasswordValid = await bcrypt.compare(password, superAdmin.password);
-
-            if (!isPasswordValid) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Invalid password'
-                });
+           if (!isFirebaseLogin) {
+                const isPasswordValid = await bcrypt.compare(password, superAdmin.password);
+                if (!isPasswordValid) {
+                    return res.status(401).json({ success: false, message: 'Invalid password' });
+                }
             }
 
             const token = jwt.sign(
@@ -74,13 +72,11 @@ const authController = {
 
         const user = userRows[0];
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid credentials'
-            })
+        if (!isFirebaseLogin) {
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({ success: false, message: 'Invalid credentials' });
+            }
         }
 
         const token = jwt.sign(
